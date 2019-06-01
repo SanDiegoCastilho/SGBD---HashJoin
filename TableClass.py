@@ -1,0 +1,3 @@
+class Table:
+    rows = []
+    colunms = []
