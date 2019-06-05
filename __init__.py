@@ -1,7 +1,10 @@
-from QueryBox.Cursorclass import Cursor
-from QueryBox.SemanticsClass import Semantics
+from TableClass import Table
+from Cursorclass import Cursor
+from SemanticsClass import Semantics
 import time
 import os
+
+tables = []
 
 print("Olá!")
 time.sleep(1)
@@ -24,6 +27,8 @@ results = obj2.queryTreatment()
 if results[0] != "1":
     for i in range(0, len(results)):
         obj.exec_consulta(results[i])
+        tables.append(Table(i))
+
 if results[0] == "1":
     obj.exec_consulta(query)
 

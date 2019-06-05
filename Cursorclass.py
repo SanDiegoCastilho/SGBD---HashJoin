@@ -1,4 +1,4 @@
-import MySQLConnector.Connector
+import Connector.py
 import os
 
 
