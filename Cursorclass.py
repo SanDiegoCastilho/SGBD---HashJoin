@@ -1,5 +1,4 @@
-import Connector.py
-import os
+import MySQLConnector.Connector
 
 
 class Cursor:
@@ -13,11 +12,14 @@ class Cursor:
 
     def exec_consulta(self, query):
         self.counter += 1
-        tuplas = []
         self.query = query
         self.cursor.execute(self.query)
-        file = open("query%d.txt" % self.counter, "w+")
+        f = open("query%d.txt" % self.counter, "w+")
+        columns = [column[0] for column in self.cursor.description]
+        f.write(str(columns)+"\n")
         for row in self.cursor:
-            tuplas.append(str(row))
-        for i in range(0, len(tuplas)):
-            file.write(tuplas[i] + "\n")
+            f.write(str(row)+"\n")
+
+    def columns(self):
+        return self.cursor.description
+

@@ -12,8 +12,9 @@ try:
                           # "password=Admin123 se for no lec, aqui em casa é admin
                           )
     print("Conexão realizada com sucesso!!")
-    time.sleep(5)
+    #time.sleep(5)
 
 except pyodbc.DatabaseError as err:
     print("Ops, o erro abaixo apareceu:\n")
     raise err
+
