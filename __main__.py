@@ -8,7 +8,7 @@ from HashTableClass import HashTable
 from config import OUTPUT_DIR
 
 def LeftDeepTree(data, parml, parmr):
-    result_table = 0
+    result_table = data[0]
     for i in range(1, len(data)):
         result_table = Table(HashJoin(data[i - 1].Table(), data[i].Table(), parml[i - 1], parmr[i-1]), False)
         data[i] = result_table
