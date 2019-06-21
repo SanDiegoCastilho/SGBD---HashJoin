@@ -1,18 +1,19 @@
 import pyodbc
+from config import DB_SERVER, DB_NAME, DB_DRIVER, DB_USER, DB_PASS, DB_PREFIX
 
 # Tenta conectar no banco de dados
 try:
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=DESKTOP-MOLLHKP;'  # servidor aqui de casa
-                          'Database=tpch;'
-                          'Trusted_Connection=yes;'
-                          # 'user=sa;'
-                          # "password=Admin123 se for no lec, aqui em casa é admin
-                          )
+    conn_str = 'Driver={%s};Server=%s;Database=%s;' % (DB_DRIVER, DB_SERVER, DB_NAME)
+    if DB_USER != '' and DB_PASS != '':
+        conn_str += 'user=%s;pwd=%s' % (DB_USER, DB_PASS)
+    else:
+        conn_str += 'Trusted_Connection=yes'
+
+    conn = pyodbc.connect(conn_str)
     # cursor de consulta
     cursor = conn.cursor()
     # consulta fornecedores
-    cursor.execute('select * from TPCSOURCE.NATION')
+    cursor.execute('select * from %s.NATION' % (DB_PREFIX))
     # printa toda as fileiras da consulta
     for row in cursor:
         print(row)

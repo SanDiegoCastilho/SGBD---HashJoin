@@ -6,23 +6,24 @@ class Table:
         if isfile:
             arq = open(file, "r+")
             lines = arq.readlines()
-            scolumns = lines[0]
-            scolumns = scolumns.replace('[', '')
-            scolumns = scolumns.replace(']', '')
-            scolumns = scolumns.replace(' ', '')
-            scolumns = scolumns.replace("'", '')
-            scolumns = scolumns.replace("\n", '')
-            self.columns = scolumns.split(',')
+            if lines:
+                scolumns = lines[0]
+                scolumns = scolumns.replace('[', '')
+                scolumns = scolumns.replace(']', '')
+                scolumns = scolumns.replace(' ', '')
+                scolumns = scolumns.replace("'", '')
+                scolumns = scolumns.replace("\n", '')
+                self.columns = scolumns.split(',')
 
-            self.rows = [[] for _ in range(len(lines)-1)]
+                self.rows = [[] for _ in range(len(lines)-1)]
 
-            for x in range(1, len(lines)):
-                srows = lines[x]
-                srows = srows.replace('(', '')
-                srows = srows.replace(')', '')
-                srows = srows.replace(' ', '')
-                srows = srows.replace('\n', '')
-                self.rows[x-1] = srows.split(',')
+                for x in range(1, len(lines)):
+                    srows = lines[x]
+                    srows = srows.replace('(', '')
+                    srows = srows.replace(')', '')
+                    srows = srows.replace(' ', '')
+                    srows = srows.replace('\n', '')
+                    self.rows[x-1] = srows.split(',')
             arq.close()
         else:
             self.columns = file[0]
