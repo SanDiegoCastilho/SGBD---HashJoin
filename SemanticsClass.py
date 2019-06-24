@@ -1,3 +1,4 @@
+from config import DB_PREFIX
 
 class Semantics:
     query = None
@@ -5,7 +6,7 @@ class Semantics:
     def __init__(self, query):
         self.query = query
 
-    def queryTreatment(self):
+    def query_treatment(self):
         querys = []
         joycons = []
         if "hash" in self.query:
@@ -17,21 +18,18 @@ class Semantics:
                 if "select" in query_splitted[i] or "SELECT" in query_splitted[i] or "Select" in query_splitted[i]:
                     if "where" in self.query or "Where" in self.query or "WHERE" in self.query:
                         querys.extend(self.hashsplit_filtered(i, query_size, query_splitted))
-                        joycons = self.joinConditions(i, query_size, query_splitted)
+                        joycons = self.join_conditions(i, query_size, query_splitted)
                         return querys, joycons
                     else:
-                        querys.extend(self.hashsplit_nofilter(i, query_size, query_splitted, querys))
-                        joycons.extend(self.joinConditions(i, query_size, query_splitted))
+                        querys.extend(self._hashsplit_nofilter(i, query_size, query_splitted, querys))
+                        joycons.extend(self.join_conditions(i, query_size, query_splitted))
                         return querys, joycons
-
-
-
-
         else:
             querys.append("1")
+            joycons = [None, None]
             return querys, joycons
 
-    def hashsplit_nofilter(self, i, query_size, query_splitted, results):
+    def _hashsplit_nofilter(self, i, query_size, query_splitted, results):
         nation_query = query_splitted[i]
         nflag = 0
         customer_query = query_splitted[i]
@@ -50,14 +48,14 @@ class Semantics:
         sflag = 0
         for j in range(i, query_size):
             if 'from' in query_splitted[j] or "FROM" in query_splitted[j] or "From" in query_splitted[j]:
-                nation_query += ' ' + "from TPCSOURCE.NATION"
-                supplier_query += ' ' + "from TPCSOURCE.SUPPLIER"
-                customer_query += ' ' + "from TPCSOURCE.CUSTOMER"
-                lineitem_query += ' ' + "from TPCSOURCE.LINEITEM"
-                orders_query += ' ' + "from TPCSOURCE.ORDERS"
-                part_query += ' ' + "from TPCSOURCE.PART"
-                partsupp_query += ' ' + "from TPCSOURCE.PARTSUPP"
-                region_query += ' ' + "from TPCSOURCE.REGION"
+                nation_query += ' ' + "from %s.NATION" % (DB_PREFIX)
+                supplier_query += ' ' + "from %s.SUPPLIER" % (DB_PREFIX)
+                customer_query += ' ' + "from %s.CUSTOMER" % (DB_PREFIX)
+                lineitem_query += ' ' + "from %s.LINEITEM" % (DB_PREFIX)
+                orders_query += ' ' + "from %s.ORDERS" % (DB_PREFIX)
+                part_query += ' ' + "from %s.PART" % (DB_PREFIX)
+                partsupp_query += ' ' + "from %s.PARTSUPP" % (DB_PREFIX)
+                region_query += ' ' + "from %s.REGION" % (DB_PREFIX)
                 if nflag != 0:
                     results.append(nation_query)
                 if sflag != 0:
@@ -232,73 +230,73 @@ class Semantics:
                             for c in range(0, len(counters)):
                                 if counters[c] != 0 and c == 0:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.NATION"
+                                        fstring += ', ' + "%s.NATION" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.NATION"
+                                        fstring += ' ' + "%s.NATION" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 1:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.SUPPLIER"
+                                        fstring += ', ' + "%s.SUPPLIER" % (DB_PREFIX)
                                     else:
-                                        fstring += ' loop' + "TPCSOURCE.SUPPLIER"
+                                        fstring += ' loop' + "%s.SUPPLIER" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 2:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.CUSTOMER"
+                                        fstring += ', ' + "%s.CUSTOMER" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.CUSTOMER"
+                                        fstring += ' ' + "%s.CUSTOMER" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 3:
                                     if "TPC" in lineitem_query:
-                                        fstring += ', ' + "TPCSOURCE.LINEITEM"
+                                        fstring += ', ' + "%s.LINEITEM" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.LINEITEM"
+                                        fstring += ' ' + "%s.LINEITEM" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 4:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.ORDERS"
+                                        fstring += ', ' + "%s.ORDERS" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.ORDERS"
+                                        fstring += ' ' + "%s.ORDERS" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 5:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.PART"
+                                        fstring += ', ' + "%s.PART" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.PART"
+                                        fstring += ' ' + "%s.PART" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 6:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.PARTSUPP"
+                                        fstring += ', ' + "%s.PARTSUPP" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.PARTSUPP"
+                                        fstring += ' ' + "%s.PARTSUPP" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 7:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.REGION"
+                                        fstring += ', ' + "%s.REGION" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.REGION"
+                                        fstring += ' ' + "%s.REGION" % (DB_PREFIX)
 
                             if "NATION" in fstring:
                                 nation_query += fstring + wstring
                             else:
-                                nation_query += " from TPCSOURCE.NATION"
+                                nation_query += " from %s.NATION" % (DB_PREFIX)
                             if "SUPPLIER" in fstring:
                                 supplier_query += fstring + wstring
                             else:
-                                supplier_query += " from TPCSOURCE.SUPPLIER"
+                                supplier_query += " from %s.SUPPLIER" % (DB_PREFIX)
                             if "CUSTOMER" in fstring:
                                 customer_query += fstring + wstring
                             else:
-                                customer_query += " from TPCSOURCE.CUSTOMER"
+                                customer_query += " from %s.CUSTOMER" % (DB_PREFIX)
                             if "LINEITEM" in fstring:
                                 lineitem_query += fstring + wstring
                             else:
-                                lineitem_query += " from TPCSOURCE.LINEITEM"
+                                lineitem_query += " from %s.LINEITEM" % (DB_PREFIX)
                             if "ORDERS" in fstring:
                                 orders_query += fstring + wstring
                             else:
-                                orders_query += " from TPCSOURCE.ORDERS"
+                                orders_query += " from %s.ORDERS" % (DB_PREFIX)
                             if "PART" in fstring:
                                 part_query += fstring + wstring
                             else:
-                                part_query += " from TPCSOURCE.PART"
+                                part_query += " from %s.PART" % (DB_PREFIX)
                             if "PARTSUPP" in fstring:
                                 partsupp_query += fstring + wstring
                             else:
-                                partsupp_query += " from TPCSOURCE.PARTSUPP"
+                                partsupp_query += " from %s.PARTSUPP" % (DB_PREFIX)
                             if "REGION" in fstring:
                                 region_query += fstring + wstring
                             else:
@@ -330,73 +328,73 @@ class Semantics:
                             for c in range(0, len(counters)):
                                 if counters[c] != 0 and c == 0:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.NATION"
+                                        fstring += ', ' + "%s.NATION" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.NATION"
+                                        fstring += ' ' + "%s.NATION" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 1:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.SUPPLIER"
+                                        fstring += ', ' + "%s.SUPPLIER" % (DB_PREFIX)
                                     else:
-                                        fstring += ' loop' + "TPCSOURCE.SUPPLIER"
+                                        fstring += ' loop' + "%s.SUPPLIER" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 2:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.CUSTOMER"
+                                        fstring += ', ' + "%s.CUSTOMER" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.CUSTOMER"
+                                        fstring += ' ' + "%s.CUSTOMER" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 3:
                                     if "TPC" in lineitem_query:
-                                        fstring += ', ' + "TPCSOURCE.LINEITEM"
+                                        fstring += ', ' + "%s.LINEITEM" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.LINEITEM"
+                                        fstring += ' ' + "%s.LINEITEM" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 4:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.ORDERS"
+                                        fstring += ', ' + "%s.ORDERS" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.ORDERS"
+                                        fstring += ' ' + "%s.ORDERS" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 5:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.PART"
+                                        fstring += ', ' + "%s.PART" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.PART"
+                                        fstring += ' ' + "%s.PART" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 6:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.PARTSUPP"
+                                        fstring += ', ' + "%s.PARTSUPP" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.PARTSUPP"
+                                        fstring += ' ' + "%s.PARTSUPP" % (DB_PREFIX)
                                 if counters[c] != 0 and c == 7:
                                     if "TPC" in fstring:
-                                        fstring += ', ' + "TPCSOURCE.REGION"
+                                        fstring += ', ' + "%s.REGION" % (DB_PREFIX)
                                     else:
-                                        fstring += ' ' + "TPCSOURCE.REGION"
+                                        fstring += ' ' + "%s.REGION" % (DB_PREFIX)
 
                             if "NATION" in fstring:
                                 nation_query += fstring + wstring
                             else:
-                                nation_query += " from TPCSOURCE.NATION"
+                                nation_query += " from %s.NATION" % (DB_PREFIX)
                             if "SUPPLIER" in fstring:
                                 supplier_query += fstring + wstring
                             else:
-                                supplier_query += " from TPCSOURCE.SUPPLIER"
+                                supplier_query += " from %s.SUPPLIER" % (DB_PREFIX)
                             if "CUSTOMER" in fstring:
                                 customer_query += fstring + wstring
                             else:
-                                customer_query += " from TPCSOURCE.CUSTOMER"
+                                customer_query += " from %s.CUSTOMER" % (DB_PREFIX)
                             if "LINEITEM" in fstring:
                                 lineitem_query += fstring + wstring
                             else:
-                                lineitem_query += " from TPCSOURCE.LINEITEM"
+                                lineitem_query += " from %s.LINEITEM" % (DB_PREFIX)
                             if "ORDERS" in fstring:
                                 orders_query += fstring + wstring
                             else:
-                                orders_query += " from TPCSOURCE.ORDERS"
+                                orders_query += " from %s.ORDERS" % (DB_PREFIX)
                             if "PART" in fstring:
                                 part_query += fstring + wstring
                             else:
-                                part_query += " from TPCSOURCE.PART"
+                                part_query += " from %s.PART" % (DB_PREFIX)
                             if "PARTSUPP" in fstring:
                                 partsupp_query += fstring + wstring
                             else:
-                                partsupp_query += " from TPCSOURCE.PARTSUPP"
+                                partsupp_query += " from %s.PARTSUPP" % (DB_PREFIX)
                             if "REGION" in fstring:
                                 region_query += fstring + wstring
                             else:
@@ -437,7 +435,7 @@ class Semantics:
                     if "R_" in query_splitted[k]:
                         rcounter += 1
 
-    def joinConditions(self, i, query_size, query_splitted):
+    def join_conditions(self, i, query_size, query_splitted):
         leftcon = list()
         rightcon = list()
         for j in range(i, query_size):
